@@ -4,16 +4,17 @@ const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 tap.test('set/get', async t => {
   set('key', 1);
-  await wait(100);
   const r = get('key');
   t.equal(r, 1);
   t.end();
 });
 
 tap.test('set/get with ttl', async t => {
-  set('key2', 1, 50);
-  await wait(100);
-  const r = get('key2');
+  set('key2', 1, 500);
+  let r = get('key2');
+  t.ok(r);
+  await wait(501);
+  r = get('key2');
   t.notOk(r);
   t.end();
 });
@@ -42,7 +43,7 @@ tap.test('getStats', async t => {
   set('key4', 1);
   remove('key3');
   const s = getStats();
-  t.match(s, { hits: 1, misses: 4, sets: 7, removes: 2 });
+  t.match(s, { hits: 2, misses: 4, sets: 7, removes: 2 });
   t.end();
 });
 
