@@ -1,0 +1,29 @@
+{
+  "name": "@firstandthird/memory-cache",
+  "version": "1.0.0",
+  "description": "An in-memory cache for use with AWS Lambda.",
+  "main": "index.js",
+  "scripts": {
+    "test": "tap test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/firstandthird/memory-cache.git"
+  },
+  "author": "First & Third",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/firstandthird/memory-cache/issues"
+  },
+  "homepage": "https://github.com/firstandthird/memory-cache#readme",
+  "eslintConfig": {
+    "extends": "firstandthird"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-firstandthird": "^4.3.0",
+    "eslint-plugin-import": "^2.17.3",
+    "tap": "^14.2.0"
+  }
+}
