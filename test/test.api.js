@@ -2,7 +2,7 @@ const tap = require('tap');
 const { get, set, remove, removeAll, getStats, memo } = require('../');
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-tap.test('set/get', async t => {
+tap.test('set/get', t => {
   set('key', 1);
   const r = get('key');
   t.equal(r, 1);
@@ -19,7 +19,7 @@ tap.test('set/get with ttl', async t => {
   t.end();
 });
 
-tap.test('remove', async t => {
+tap.test('remove', t => {
   set('key3', 1);
   remove('key3');
   const r = get('key2');
@@ -27,7 +27,7 @@ tap.test('remove', async t => {
   t.end();
 });
 
-tap.test('removeAll', async t => {
+tap.test('removeAll', t => {
   set('key3', 1);
   set('key4', 1);
   removeAll();
@@ -38,7 +38,7 @@ tap.test('removeAll', async t => {
   t.end();
 });
 
-tap.test('getStats', async t => {
+tap.test('getStats', t => {
   set('key3', 1);
   set('key4', 1);
   remove('key3');

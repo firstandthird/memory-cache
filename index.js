@@ -9,26 +9,28 @@ const get = function(key) {
     return null;
   }
   stats.hits++;
-  return val.value
-}
+  return val.value;
+};
 const set = function(key, value, ttl) {
   stats.sets++;
   cache[key] = {
     value,
     expires: ttl > 0 ? new Date().getTime() + ttl : -1
   };
-}
+};
+
 const remove = function(key) {
   stats.removes++;
-  delete cache[key]
-}
+  delete cache[key];
+};
+
 const removeAll = function() {
   cache = {};
-}
+};
 
 const getStats = function() {
   return stats;
-}
+};
 
 const memo = async function(key, fn, ttl, forceUpdate) {
   const value = get(key);
@@ -38,7 +40,7 @@ const memo = async function(key, fn, ttl, forceUpdate) {
   const result = await fn();
   set(key, result, ttl);
   return result;
-}
+};
 
 export {
   get,
