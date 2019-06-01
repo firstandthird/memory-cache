@@ -42,7 +42,7 @@ const memo = async function(key, fn, ttl, forceUpdate) {
   return result;
 };
 
-export {
+module.exports = {
   get,
   set,
   remove,
