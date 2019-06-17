@@ -64,13 +64,13 @@ tap.test('instances do not collide', t => {
   t.end();
 });
 
-tap.test('set/get with allowStale', async t => {
-  const { get, set } = spawn(true);
+tap.test('getCacheObject', async t => {
+  const { getCacheObject, set } = spawn(true);
   set('key2', 1, 500);
-  let r = get('key2');
+  let r = getCacheObject('key2');
   t.ok(r);
   await wait(501);
-  r = get('key2');
+  r = getCacheObject('key2');
   t.ok(r, 'in allowStale mode the cache has to be manually refreshed');
   t.end();
 });
