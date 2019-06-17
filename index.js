@@ -18,6 +18,8 @@ module.exports = (allowStale = false) => {
       stats.misses++;
       return null;
     }
+    stats.hits++;
+    return val.value;
   };
   const set = function(key, value, ttl) {
     stats.sets++;
@@ -39,7 +41,6 @@ module.exports = (allowStale = false) => {
   const getStats = function() {
     return stats;
   };
-
   return {
     get,
     set,

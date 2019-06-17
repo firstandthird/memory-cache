@@ -65,7 +65,7 @@ tap.test('instances do not collide', t => {
 });
 
 tap.test('set/get with allowStale', async t => {
-  const { get, set } = spawn();
+  const { get, set } = spawn(true);
   set('key2', 1, 500);
   let r = get('key2');
   t.ok(r);
