@@ -1,6 +1,6 @@
 {
   "name": "@firstandthird/memory-cache",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "An in-memory cache for use with AWS Lambda.",
   "main": "index.js",
   "scripts": {
