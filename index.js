@@ -1,52 +1,49 @@
-let cache = {};
-const stats = { hits: 0, misses: 0, sets: 0, removes: 0 };
-
-const get = function(key) {
-  const val = cache[key];
-  //if not exists, or (value has expires and its in the past)
-  if (!val || (val.expires > 0 && val.expires < new Date().getTime())) {
-    stats.misses++;
-    return null;
+class MemoryCache {
+  constructor() {
+    this.cache = {};
+    this.stats = { hits: 0, misses: 0, sets: 0, removes: 0 };
   }
-  stats.hits++;
-  return val.value;
-};
-const set = function(key, value, ttl) {
-  stats.sets++;
-  cache[key] = {
-    value,
-    expires: ttl > 0 ? new Date().getTime() + ttl : -1
-  };
-};
 
-const remove = function(key) {
-  stats.removes++;
-  delete cache[key];
-};
-
-const removeAll = function() {
-  cache = {};
-};
-
-const getStats = function() {
-  return stats;
-};
-
-const memo = async function(key, fn, ttl, forceUpdate) {
-  const value = get(key);
-  if (!forceUpdate && value) {
-    return value;
+  getCacheObject(key) {
+    const val =   this.cache[key];
+    //if not exists:
+    if (!val) {
+      this.stats.misses++;
+      return null;
+    }
+    this.stats.hits++;
+    return val;
   }
-  const result = await fn();
-  set(key, result, ttl);
-  return result;
-};
 
-module.exports = {
-  get,
-  set,
-  remove,
-  removeAll,
-  getStats,
-  memo
-};
+  get(key) {
+    const val = this.getCacheObject(key);
+    // if value exists but has expired:
+    if (val === null || (val.expires > 0 && val.expires < new Date().getTime())) {
+      return null;
+    }
+    return val.value;
+  }
+
+  set(key, value, ttl) {
+    this.stats.sets++;
+    this.cache[key] = {
+      value,
+      expires: ttl > 0 ? new Date().getTime() + ttl : -1
+    };
+  }
+
+  remove(key) {
+    this.stats.removes++;
+    delete this.cache[key];
+  }
+
+  removeAll() {
+    this.cache = {};
+  }
+
+  getStats() {
+    return this.stats;
+  }
+}
+
+module.exports = MemoryCache;

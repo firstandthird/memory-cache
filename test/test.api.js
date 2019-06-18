@@ -1,71 +1,77 @@
 const tap = require('tap');
-const { get, set, remove, removeAll, getStats, memo } = require('../');
+const MemoryCache = require('../');
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 tap.test('set/get', t => {
-  set('key', 1);
-  const r = get('key');
+  const cache = new MemoryCache();
+  cache.set('key', 1);
+  const r = cache.get('key');
   t.equal(r, 1);
   t.end();
 });
 
 tap.test('set/get with ttl', async t => {
-  set('key2', 1, 500);
-  let r = get('key2');
+  const cache = new MemoryCache();
+  cache.set('key2', 1, 500);
+  let r = cache.get('key2');
   t.ok(r);
   await wait(501);
-  r = get('key2');
+  r = cache.get('key2');
   t.notOk(r);
   t.end();
 });
 
 tap.test('remove', t => {
-  set('key3', 1);
-  remove('key3');
-  const r = get('key2');
+  const cache = new MemoryCache();
+  cache.set('key3', 1);
+  cache.remove('key3');
+  const r = cache.get('key2');
   t.notOk(r);
   t.end();
 });
 
 tap.test('removeAll', t => {
-  set('key3', 1);
-  set('key4', 1);
-  removeAll();
-  const r = get('key3');
+  const cache = new MemoryCache();
+  cache.set('key3', 1);
+  cache.set('key4', 1);
+  cache.removeAll();
+  const r = cache.get('key3');
   t.notOk(r);
-  const r2 = get('key4');
+  const r2 = cache.get('key4');
   t.notOk(r2);
   t.end();
 });
 
 tap.test('getStats', t => {
-  set('key3', 1);
-  set('key4', 1);
-  remove('key3');
-  const s = getStats();
-  t.match(s, { hits: 2, misses: 4, sets: 7, removes: 2 });
+  const cache = new MemoryCache();
+  cache.set('key3', 1);
+  cache.set('key4', 1);
+  cache.remove('key3');
+  const s = cache.getStats();
+  t.match(s, { hits: 0, misses: 0, sets: 2, removes: 1 });
   t.end();
 });
 
-tap.test('memo', async t => {
-  let called = 0;
-  const fP = async() => {
-    called++;
-    await wait(100);
-    return 21;
-  };
-  let r1 = await memo('memo1', fP);
-  t.equal(called, 1);
-  t.equal(r1, 21);
-  r1 = await memo('memo1', fP);
-  t.equal(called, 1);
-  t.equal(r1, 21);
-  r1 = await memo('memo1', fP, 100, true);
-  t.equal(called, 2);
-  t.equal(r1, 21);
-  await wait(110);
-  r1 = await memo('memo1', fP);
-  t.equal(called, 3);
-  t.equal(r1, 21);
+tap.test('instances do not collide', t => {
+  const cache1 = new MemoryCache();
+  const cache2 = new MemoryCache();
+  cache1.set('key1', 1);
+  cache2.set('key1', 2);
+  const r1 = cache1.get('key1');
+  const r2 = cache2.get('key1');
+  t.equal(r1, 1);
+  t.equal(r2, 2);
+  t.end();
+});
+
+tap.test('getCacheObject', async t => {
+  const cache = new MemoryCache();
+  cache.set('key2', 1, 500);
+  let r = cache.getCacheObject('key2');
+  t.ok(r.value);
+  t.ok(r.expires);
+  await wait(501);
+  r = cache.getCacheObject('key2');
+  t.ok(r, 'in allowStale mode the cache has to be manually refreshed');
   t.end();
 });
