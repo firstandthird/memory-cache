@@ -1,51 +1,49 @@
+class MemoryCache {
+  constructor() {
+    this.cache = {};
+    this.stats = { hits: 0, misses: 0, sets: 0, removes: 0 };
+  }
 
-module.exports = () => {
-  let cache = {};
-  const stats = { hits: 0, misses: 0, sets: 0, removes: 0 };
-  const getCacheObject = function(key) {
-    const val = cache[key];
+  getCacheObject(key) {
+    const val =   this.cache[key];
     //if not exists:
     if (!val) {
-      stats.misses++;
+      this.stats.misses++;
       return null;
     }
-    stats.hits++;
+    this.stats.hits++;
     return val;
-  };
-  const get = function(key) {
-    const val = getCacheObject(key);
+  }
+
+  get(key) {
+    const val = this.getCacheObject(key);
     // if value exists but has expired:
     if (val === null || (val.expires > 0 && val.expires < new Date().getTime())) {
       return null;
     }
     return val.value;
-  };
-  const set = function(key, value, ttl) {
-    stats.sets++;
-    cache[key] = {
+  }
+
+  set(key, value, ttl) {
+    this.stats.sets++;
+    this.cache[key] = {
       value,
       expires: ttl > 0 ? new Date().getTime() + ttl : -1
     };
-  };
+  }
 
-  const remove = function(key) {
-    stats.removes++;
-    delete cache[key];
-  };
+  remove(key) {
+    this.stats.removes++;
+    delete this.cache[key];
+  }
 
-  const removeAll = function() {
-    cache = {};
-  };
+  removeAll() {
+    this.cache = {};
+  }
 
-  const getStats = function() {
-    return stats;
-  };
-  return {
-    get,
-    getCacheObject,
-    set,
-    remove,
-    removeAll,
-    getStats
-  };
-};
+  getStats() {
+    return this.stats;
+  }
+}
+
+module.exports = MemoryCache;
