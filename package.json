@@ -4,6 +4,7 @@
   "description": "An in-memory cache for use with AWS Lambda.",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint .",
     "test": "tap test/test.api.js"
   },
   "repository": {

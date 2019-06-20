@@ -5,7 +5,7 @@ class MemoryCache {
   }
 
   getCacheObject(key) {
-    const val =   this.cache[key];
+    const val = this.cache[key];
     //if not exists:
     if (!val) {
       this.stats.misses++;
