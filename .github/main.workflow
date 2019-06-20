@@ -9,7 +9,7 @@ workflow "build and test" {
 
 action "lint" {
   uses = "actions/npm@master"
-  args = "lint"
+  args = "run lint"
 }
 
 action "build" {
