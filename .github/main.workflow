@@ -7,14 +7,17 @@ workflow "build and test" {
   ]
 }
 
-action "lint" {
-  uses = "actions/npm@master"
-  args = "run lint"
-}
-
 action "build" {
   uses = "actions/npm@master"
   args = "install"
+}
+
+action "lint" {
+  needs = [
+    "build"
+  ],
+  uses = "actions/npm@master"
+  args = "run lint"
 }
 
 action "test" {
