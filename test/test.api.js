@@ -75,3 +75,16 @@ tap.test('getCacheObject', async t => {
   t.ok(r, 'in allowStale mode the cache has to be manually refreshed');
   t.end();
 });
+
+tap.test('set/get with ttl -1', async t => {
+  const cache = new MemoryCache();
+  cache.set('key2', 1, -1);
+  let r = cache.get('key2');
+  t.ok(r);
+  await wait(501);
+  r = cache.get('key2');
+  t.ok(r);
+  const obj = cache.getCacheObject('key2');
+  t.equal(obj.expires, -1);
+  t.end();
+});
